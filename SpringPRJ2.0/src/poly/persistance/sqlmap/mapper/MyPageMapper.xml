@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.IMyPageMapper">
+
+<select id="getATListOne" resultType="GovPublicOfficialDTO">
+SELECT * FROM public_official
+</select>
+
+<select id="getATListTwo" resultType="GovPublicOfficialDTO">
+SELECT * FROM public_official where cities_no = 4
+</select>
+
+<select id="getATListThree" resultType="GovPublicOfficialDTO">
+SELECT * FROM public_official where cities_no = 5
+</select>
+
+<select id="getlandDetail" parameterType="String" resultType="LandscapingDTO">
+SELECT 
+field.field_of_business_name as field_of_business_name, 
+land.company_name as company_name, 
+land.company_tel as company_tel,
+land.business_registration_number as business_registration_number, 
+land.sales as sales, 
+land.available_staff as available_staff 
+FROM 
+field_of_business field, landscaping_enterprise land, landscaping_field_business lf 
+WHERE 
+land.landscaping_enterprise_no = lf.landscaping_enterprise_no 
+AND 
+lf.field_of_business_no = field.field_of_business_no 
+AND 
+land.landscaping_enterprise_id = #{sessionID}
+</select>
+
+<select id="getgovDetail" parameterType="String" resultType="GovPublicOfficialDTO">
+SELECT
+pub.name as name,
+pub.affiliated_department as affiliated_department,
+pub.public_official_tel as public_official_tel,
+ct.cities_name, 
+met.metropolitan_city_name 
+FROM
+public_official pub, cities ct, metropolitan_city met
+WHERE
+pub.public_official_id = #{sessionID} 
+AND
+pub.cities_no = ct.cities_no 
+AND
+ct.metropolitan_city_no = met.metropolitan_city_no
+</select>
+
+<select id="getpriDetail" parameterType="String" resultType="PriEnterpriseDTO">
+SELECT 
+pri.pri_enterprise_name as pri_enterprise_name, 
+pri.pri_enterprise_tel as pri_enterprise_tel, 
+pri.pri_registration_number as pri_registration_number, 
+ct.cities_name, 
+met.metropolitan_city_name 
+FROM 
+pri_enterprise pri, cities ct, metropolitan_city met 
+WHERE
+pri.pri_enterprise_id = #{sessionID} 
+AND 
+pri.cities_no = ct.cities_no 
+AND 
+ct.metropolitan_city_no = met.metropolitan_city_no
+</select>
+
+<select id="getPartName" resultType="String">
+SELECT field_of_business_name from field_of_business
+</select>
+
+
+<select id="userCheck" parameterType="String" resultType="Integer">
+SELECT 
+count(*) 
+FROM 
+landscaping_enterprise 
+WHERE 
+LANDSCAPING_ENTERPRISE_ID = #{id}
+</select>
+
+
+</mapper>
